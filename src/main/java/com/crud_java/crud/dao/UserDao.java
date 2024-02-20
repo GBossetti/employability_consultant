@@ -6,4 +6,10 @@ import java.util.List;
 
 public interface UserDao {
     List<User> getUsers();
+
+    void deteleUser(Long id);
+
+    void registerUser(User user);
+
+    boolean verifyCredentials(User user);
 }

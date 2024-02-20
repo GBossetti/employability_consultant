@@ -1,9 +1,8 @@
 // Call the dataTables jQuery plugin
 $(document).ready(function() {
   console.log("Test_ok");
-  createUser();
+  listUsers();
   $('#usersDataTable').DataTable();
-
 });
 
 /*async function createUser(){
@@ -18,9 +17,9 @@ $(document).ready(function() {
   console.log(users);
 }*/
 
-async function fetchUser() {
+async function fetchListUsers() {
   try {
-    const url = 'user/123';
+    const url = 'api/users';
     const fetchOptions = {
       method: 'GET',
       headers: {
@@ -28,36 +27,66 @@ async function fetchUser() {
         'Content-Type': 'application/json'
       }
     };
-
     const response = await fetch(url, fetchOptions);
     if (!response.ok) {
       throw new Error('Failed to fetch user data');
     }
-    cons pathJson = './users_data.json'
-    const userData = await response.json();
-    return userData;
+    const usersData = await response.json();
+    return usersData;
   } catch (error) {
     console.error('Error fetching user data:', error);
     throw error; // Re-throw the error for handling at a higher level
   }
 }
 
-async function createUser() {
+async function fetchDeleteUser(id) {
   try {
-    const usersData = await fetchUser();
-    console.log(usersData);
-
-    let listHtml = '';
-
-    for (let user of usersData){
-        let userHtml = '<tr><td>'+ user.name'</td><td>'+ user.surname'</td><td>'+ user.email'</td><td>'+ user.phone'</td></tr>'
-        listHtml += userHtml;
+    const url = 'api/users/' + id;
+    const fetchOptions = {
+      method: 'DELETE',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    };
+    const response = await fetch(url, fetchOptions);
+    if (!response.ok) {
+      throw new Error('Failed to fetch user data');
     }
-
-
-    document.querySelector('#usersDataTable tbody').outerHTML = listHtml;
-
   } catch (error) {
-    // Handle the error, if necessary
+    console.error('Error fetching user data:', error);
+    throw error; // Re-throw the error for handling at a higher level
   }
 }
+
+async function listUsers() {
+  try {
+    const usersData = await fetchListUsers();
+    console.log(usersData);
+    let listHtml = '';
+    for (let user of usersData){
+        let deleteButton = '<a href="#" onclick="deleteUser('+ user.id +')" class="btn btn-danger btn-circle"><i class="fas fa-trash"></i></a>'
+        let userHtml = '<tr><td>'+ user.name +'</td><td>'+ user.surname +'</td><td>'+ user.email +'</td><td>'+ user.phone +'</td><td>' + deleteButton +'</td></tr>'
+        listHtml += userHtml;
+    }
+    document.querySelector('#usersDataTable tbody').outerHTML = listHtml;
+  } catch (error) {
+    console.log('Error message', error);
+  }
+}
+
+
+async function deleteUser(id) {
+    if(!confirm('Are you sure you want to delete this user?')){
+        return;
+    }
+    try{
+        const deleteUser = await fetchDeleteUser(id);
+        console.log(deleteUser);
+        location.reload();
+    }
+    catch(error){
+        console.log('Error message:', error);
+    }
+}
+

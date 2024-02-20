@@ -2,10 +2,9 @@ package com.crud_java.crud.controller;
 
 import com.crud_java.crud.dao.UserDao;
 import com.crud_java.crud.models.User;
+import org.apache.coyote.Request;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -14,12 +13,11 @@ public class UserController {
 
     @Autowired
     private UserDao userDao;
-    @RequestMapping (value= "test")
+    @RequestMapping (value= "test", method = RequestMethod.GET)
     public List<String> test01() {
         return List.of("manzana", "kiwi", "naranja");
     }
-
-    @RequestMapping (value="user/{id}")
+    @RequestMapping (value="api/user/{id}", method = RequestMethod.GET)
     public User getUser(@PathVariable Long id){
         User user = new User();
         user.setId(id);
@@ -32,8 +30,19 @@ public class UserController {
         return user;
     }
 
-    @RequestMapping(value="users")
+    @RequestMapping(value="api/users", method = RequestMethod.GET)
     public List<User> getUsers(){
         return userDao.getUsers();
+    }
+
+    @RequestMapping(value = "api/users/{id}", method = RequestMethod.DELETE)
+    public void deleteUser(@PathVariable Long id){
+        userDao.deteleUser(id);
+    }
+
+    @RequestMapping(value = "api/users", method = RequestMethod.POST)
+    public void registerUser(@RequestBody User user){
+        System.out.println(user);
+        userDao.registerUser(user);
     }
 }
