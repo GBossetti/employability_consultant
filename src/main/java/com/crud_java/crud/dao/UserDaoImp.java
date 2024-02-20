@@ -22,7 +22,7 @@ public class UserDaoImp implements UserDao{
     }
 
     @Override
-    public void deteleUser(Long id) {
+    public void deleteUser(Long id) {
         User user = entityManager.find(User.class, id);
         entityManager.remove(user);
     }

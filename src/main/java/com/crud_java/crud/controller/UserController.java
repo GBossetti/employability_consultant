@@ -2,7 +2,6 @@ package com.crud_java.crud.controller;
 
 import com.crud_java.crud.dao.UserDao;
 import com.crud_java.crud.models.User;
-import org.apache.coyote.Request;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,7 +36,7 @@ public class UserController {
 
     @RequestMapping(value = "api/users/{id}", method = RequestMethod.DELETE)
     public void deleteUser(@PathVariable Long id){
-        userDao.deteleUser(id);
+        userDao.deleteUser(id);
     }
 
     @RequestMapping(value = "api/users", method = RequestMethod.POST)
