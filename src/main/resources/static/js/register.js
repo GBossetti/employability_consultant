@@ -38,7 +38,9 @@ async function registerUser() {
         return;
     }
     try{
-        const registerUser = await fetchRegisterUser(data);
+        await fetchRegisterUser(data);
+        alert("Account created succesfully");
+        window.location.href = 'login.html';
     }
     catch(error){
         console.log('Error message:', error);

@@ -1,6 +1,8 @@
 package com.crud_java.crud.dao;
 
 import com.crud_java.crud.models.User;
+import de.mkammerer.argon2.Argon2;
+import de.mkammerer.argon2.Argon2Factory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
@@ -34,13 +36,16 @@ public class UserDaoImp implements UserDao{
 
     @Override
     public boolean verifyCredentials(User user) {
-        String query = "FROM User WHERE email = :email AND password = :password";
+        String query = "FROM User WHERE email = :email";
         List<User> userList = entityManager.createQuery(query)
                 .setParameter("email", user.getEmail())
-                .setParameter("password", user.getPassword())
                 .getResultList();
 
-        return !userList.isEmpty();
+        if (userList.isEmpty())
+            return false;
 
-    }
+        String hashedPassword = userList.get(0).getPassword();
+        Argon2 argon2 = Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2id);
+        return argon2.verify(hashedPassword, user.getPassword());
+    };
 }

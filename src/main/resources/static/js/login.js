@@ -28,9 +28,17 @@ async function loginUser() {
     data.email = document.getElementById('txtEmail').value;
     data.password = document.getElementById('txtPassword').value;
     try{
-        const logInUser = await fetchLoginUser(data);
+        const loginUser = await fetchLoginUser(data).text();
+        if (loginUser == 'OK'){
+            alert("User logged succesfull");
+        }else{
+            alert("Credentials are incorrect, please try again")
+        }
     }
     catch(error){
         console.log('Error message:', error);
     }
+
+
+
 }
